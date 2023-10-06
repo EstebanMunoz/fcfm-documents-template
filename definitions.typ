@@ -17,7 +17,7 @@
 }
 
 // Definir ancho del counter y número de página en el índice
-#let outline-page-number-width = state("outline-page-number-width", 0pt)
+#let outline-counter-width = state("outline-counter-width", 0pt)
 #let outline-page-number-width = state("outline-page-number-width", 0pt)
 
 
