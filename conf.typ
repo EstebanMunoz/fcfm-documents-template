@@ -126,14 +126,16 @@
   })
 
 
-  // Cambiar fill predeterminado de índices
-  set outline(fill: repeat([.#h(6pt)]))
-
-  
-  // Modifica apariencia de índices  
-  show outline.entry.where(level: 1): it => {
+    // Modifica apariencia de índices. Inspirado en un código del usuario RubixDev en Discord
+  show outline.entry: it => {
     let el = it.element
-    if el.func() == heading {
+
+    // Previene recursión infinita
+    if it.at("label", default: none) == <modified-entry> {
+      it
+
+    // Los heading de nivel 1 no tienen fill y están con negrita
+    } else if el.func() == heading and it.level == 1 {
       let entry = if el.numbering == none {
         el.body
       } else [
@@ -142,8 +144,27 @@
       
       strong(link(el.location(), stack(dir: ltr,[#entry], 1fr, [#it.page])))
       v(-1.55em)
+
+    // Todo el resto de entradas tiene un fill predeterminado
     } else{
-      link(el.location(), [#el.counter.at(el.location()).first(). #h(15pt) #el.caption #h(5pt) #box(width: 1fr, it.fill) #it.page])
+      style(styles => {
+        let this-width = measure(it.page, styles).width
+        outline-page-number-width.update(prev => calc.max(this-width, prev))
+        locate(loc => {
+          let max-page-width = outline-page-number-width.final(loc)
+          let max-counter-width = outline-counter-width.final(loc)
+          let fields = it.fields()
+          fields.body = if el.func() == heading [
+            #numbering(el.numbering, ..counter(heading).at(el.location())) #h(indent-space) #el.body
+          ] else [
+            #let counter-width = measure([#el.counter.at(el.location()).first()], styles).width
+            #outline-counter-width.update(prev => calc.max(counter-width, prev))
+            #el.counter.at(el.location()).first(). #h(10pt + (max-counter-width - counter-width)) #el.caption.body
+          ]
+          fields.fill = box(width: 100% - (max-page-width - this-width) - .4cm, repeat[~~.])
+          [#outline.entry(..fields.values()) <modified-entry>]
+        })
+      })
     }
   }
 

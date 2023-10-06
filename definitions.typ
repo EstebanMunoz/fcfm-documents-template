@@ -16,6 +16,10 @@
   return hide[#body]
 }
 
+// Definir ancho del counter y número de página en el índice
+#let outline-page-number-width = state("outline-page-number-width", 0pt)
+#let outline-page-number-width = state("outline-page-number-width", 0pt)
+
 
 // Header
 #let current-header = state("current-header", "")
