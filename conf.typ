@@ -140,13 +140,14 @@
   show figure.where(kind: raw): set figure(supplement: "Código")
   
   let icon(codepoint) = {
-  box(
-    height: 0.8em,
-    baseline: 0.05em,
-    image(codepoint)
-  )
-  h(0.1em)
-}
+    box(
+      height: 0.8em,
+      baseline: 0.05em,
+      image(codepoint)
+    )
+    h(0.1em)
+  }
+
   show: codly-init.with()
   codly(languages: (
     python: (

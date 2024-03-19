@@ -2,12 +2,12 @@
 
 // Parámetros para la configuración del documento. Descomentar aquellas que se quieran usar
 #let document-params = (
-  "include-title-page": false,
-  // "title": "",
-  // "subject": "",
+  // "include-title-page": false,
+  "title": "Document title",
+  "subject": "Document subject",
   // "course-name": "",
   // "course-code": "",
-  // "students": (),
+  "students": ("Esteban Muñoz",),
   // "teachers": (),
   // "auxiliaries": (),
   // "assistants": (),
