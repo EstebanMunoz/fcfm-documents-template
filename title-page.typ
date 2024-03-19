@@ -1,4 +1,9 @@
-#import "@preview/tablex:0.0.5": tablex, rowspanx, colspanx
+#let place-people-in-grid(people, single-people-str, multiple-people-str) = {
+  let num-people = people.len()
+  if num-people == 0 {()}
+  else if num-people == 1 {(single-people-str,)}
+  else {(grid.cell(rowspan: num-people, multiple-people-str),)}
+}
 
 #let title-page(
   title: none,
@@ -10,7 +15,7 @@
   lab-assistants: (),
   semester: none,
   due-date: none,
-  location: none,
+  place: none,
   university: none,
   faculty: none,
   department: none,
@@ -47,64 +52,40 @@
 
   align(right + bottom)[
     #block(width: 260pt)[
-      #tablex(
+      #grid(
         columns: (75pt, auto),
-        row-gutter: -2pt,
-        auto-lines: false,
-
-        {
-          let num-int = students.len()
-          if num-int == 0 {()}
-          else if num-int == 1 [Integrante:]
-          else {rowspanx(num-int)[Integrantes:]}
-        },
+        align: (top + right, top + left),
+        column-gutter: 20pt,
+        row-gutter: 7pt,
+        
+        ..place-people-in-grid(students, "Integrante:", "Integrantes:"),
         ..students,
 
-        {
-          let num-prof = teachers.len()
-          if num-prof == 0 {()}
-          else if num-prof == 1 [Profesor:]
-          else {rowspanx(num-prof)[Profesores:]}
-        },
+        ..place-people-in-grid(teachers, "Profesor:", "Profesores:"),
         ..teachers,
-        
-        {
-          let num-aux = auxiliaries.len()
-          if num-aux == 0 {()}
-          else if num-aux == 1 [Auxiliar:]
-          else {rowspanx(num-aux)[Auxiliares:]}
-        },
+
+        ..place-people-in-grid(auxiliaries, "Auxiliar:", "Auxiliares:"),
         ..auxiliaries,
-        
-        {
-          let num-ayu = assistants.len()
-          if num-ayu == 0 {()}
-          else if num-ayu == 1 [Ayudante:]
-          else {rowspanx(num-ayu)[Ayudantes:]}
-        },
+
+        ..place-people-in-grid(assistants, "Ayudante:", "Ayudantes:"),
         ..assistants,
 
-        {
-          let num-lab = lab-assistants.len()
-          if num-lab == 0 {()}
-          else if num-lab == 1 [Ayudante de \ laboratorio:]
-          else {rowspanx(num-lab)[Ayudantes de  laboratorio:]}
-        },
+        ..place-people-in-grid(lab-assistants, [Ayudante de \ laboratorio:], [Ayudantes de \ laboratorio:]),
         ..lab-assistants,
 
         if semester != none {
-          [Semestre:]
+          "Semestre:"
         },
         semester,
 
-        colspanx(2)[#v(5pt)],
-
-        if due-date != none {
-          colspanx(2)[Fecha de entrega: #due-date]
-        },
+        grid.cell(colspan: 2, v(5pt)),
         
-        if location != none {
-          colspanx(2)[#location]
+        if due-date != none {
+          grid.cell(colspan: 2, align: left)[Fecha de entrega: #due-date]
+        },
+
+        if place != none {
+          grid.cell(colspan: 2, align: left, place)
         }
       )
     ]

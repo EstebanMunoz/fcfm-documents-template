@@ -1,5 +1,7 @@
-#import "definitions.typ": *
 #import "title-page.typ": title-page
+#import "custom-outline.typ": custom-outline
+
+#import "@preview/codly:0.2.0": *
 
 #let conf(
   include-title-page: true,
@@ -12,7 +14,7 @@
   lab-assistants: (),
   semester: none,
   due-date: none,
-  location: none,
+  place: none,
   university: none,
   faculty: none,
   department: none,
@@ -21,152 +23,45 @@
   course-name: none,
   doc
 ) = {
+  // Función que entrega el heading que debe ir en el header
+  let get-heading-for-header() = context {
+    let headings = query(
+      selector(heading.where(level: 1))
+    ).filter(it => it.location().page() <= here().page())
+  
+    return if headings.len() > 0 {
+      headings.last().body
+    }
+  }
 
   // Seteo general del documento
   set document(title: title, author: students)
-  set page("us-letter", margin: (top: 3.37cm, bottom: 3.07cm, right: 2.54cm, left: 2.54cm), header: header-content(), footer: footer-content(title, course-code, course-name), numbering: "1")
+  
+  set page(
+    "us-letter",
+    margin: (top: 3.37cm, bottom: 3.07cm, right: 2.54cm, left: 2.54cm),
+    header: [#stack(
+      dir: ttb,
+      spacing: 4.5pt,
+      [#smallcaps(title) #h(1fr) #emph(get-heading-for-header())],
+      line(length: 100%, stroke: 0.4pt)
+    )],
+    footer: [#stack(
+      dir: ttb,
+      spacing: 4.5pt,
+      line(length: 100%, stroke: 0.4pt),
+      [#emph([#course-code #course-name]) #h(1fr) #context counter(page).display(here().page-numbering())]
+    )],
+    numbering: "1"
+  )
+  
   set par(leading: 0.55em, justify: true)
   set heading(numbering: "1.")
   set text(size: 11pt, font: "New Computer Modern", lang: "es")
-  show raw: set text(font: "New Computer Modern Mono")
-
-
-  // Resize de títulos y subtítulos
-  let font-sizes = (17.28pt, 14.4pt, 12pt)
-  show heading: it => block(above: 1.4em, below: 1em)[
-    #let new-size = font-sizes.at(it.level - 1, default: 11pt)
-    #set text(size: new-size)
-    #locate(loc => [
-      #if it.numbering == none {it.body
-    } else [#numbering(it.numbering, ..counter(heading).at(loc)) #h(10pt) #it.body]
-    ])
-  ]
-
-
-  // Actualiza el contador de subfigure de forma apropiada
-  show figure.where(kind:image): it => {
-    counter(figure.where(kind:"subfigure")).update(0)
-    it
-  }
-
-
-  // Referencia de forma apropiada
-  show ref: it => {
-    let el = it.element
-    if el != none {
-      if el.func() == figure and el.kind == "subfigure" {
-        let fig-counter = counter(figure.where(kind: image)).at(el.location()).first()
-        let subfig-numbering = numbering(el.numbering, el.counter.at(el.location()).first())
-        [Figura #fig-counter.#subfig-numbering]
-      } else if el.func() == heading and el.supplement == [Anexo] and el.level == 1 {
-        numbering(el.numbering, ..counter(heading).at(el.location()))
-      } else {
-        it
-      }
-    }
-  }
-
-
-  // Muestra el caption correcto de subfigures
-  show figure.where(kind:"subfigure"): it => align(center)[
-    #it.body
-    #if it.caption != none {
-      v(-5pt)
-      [(#it.counter.display(it.numbering)) #it.caption.body]
-    }
-    #v(5pt)
-  ]
-
-
-  // Modifica el entorno de Códigos
-  show raw.where(block: true): (it) => style((st) => {
-    let leading = 0.7em
-    let gutter = 2 * leading
-    let inset = (x: leading * 1.5, y: leading * 0.75)
-    let stroke = luma(80%) + 0.75pt
-    let num-style(n) = text(0.8em, str(n))
-    let fill(i) = luma(if calc.even(i) { 98% } else { 95% })
-
-    let lines = it.text.trim().split("\n")
-    let n-lines = calc.max(lines.len(), 1)
-    let leaded = { set par(leading: leading); it }
-    let line-h = (measure(leaded, st).height - leading * (n-lines - 1)) / n-lines
-    let nums-w = inset.x + measure(str(lines.len() + 1), st).width
-
-    let rows = for (i, line) in lines.enumerate() {
-      let bg = fill(i)
-      let num = block(
-        stroke: (left: stroke),
-        fill: bg,
-        align(right + horizon, num-style(i + 1))
-      )
-      let gutter = block(fill: bg)
-        let text = block(
-          stroke: (right: stroke), fill: bg,
-          clip: true,
-          place(dy: leading / 2 - (line-h + leading) * i, leaded)
-        )
-        (num, gutter, text)
-    }
-    
-    block(width: 100%, stack(
-      block(
-        width: 100%, height: inset.y, fill: fill(0),
-        radius: (top: inset.y), stroke: (x: stroke, top: stroke)
-      ),
-      {
-        set block(width: 100%, height: line-h + leading)
-        grid(columns: (nums-w, gutter, 1fr), ..rows)
-      },
-      block(
-        width: 100%, height: inset.y, fill: fill(lines.len() - 1),
-        radius: (bottom: inset.y), stroke: (x: stroke, bottom: stroke)
-      )
-    ))
-  })
-
-
-    // Modifica apariencia de índices. Inspirado en un código del usuario RubixDev en Discord
-  show outline.entry: it => {
-    let el = it.element
-
-    // Previene recursión infinita
-    if it.at("label", default: none) == <modified-entry> {
-      it
-
-    // Los heading de nivel 1 no tienen fill y están con negrita
-    } else if el.func() == heading and it.level == 1 {
-      let entry = if el.numbering == none {
-        el.body
-      } else [
-        #numbering(el.numbering, ..counter(heading).at(el.location())) #h(indent-space) #el.body
-      ]
-      
-      strong(link(el.location(), stack(dir: ltr,[#entry], 1fr, [#it.page])))
-      v(-1.55em)
-
-    // Todo el resto de entradas tiene un fill predeterminado
-    } else{
-      style(styles => {
-        let this-width = measure(it.page, styles).width
-        outline-page-number-width.update(prev => calc.max(this-width, prev))
-        locate(loc => {
-          let max-page-width = outline-page-number-width.final(loc)
-          let max-counter-width = outline-counter-width.final(loc)
-          let fields = it.fields()
-          fields.body = if el.func() == heading [
-            #numbering(el.numbering, ..counter(heading).at(el.location())) #h(indent-space) #el.body
-          ] else [
-            #let counter-width = measure([#el.counter.at(el.location()).first()], styles).width
-            #outline-counter-width.update(prev => calc.max(counter-width, prev))
-            #el.counter.at(el.location()).first(). #h(10pt + (max-counter-width - counter-width)) #el.caption.body
-          ]
-          fields.fill = box(width: 100% - (max-page-width - this-width) - .4cm, repeat[~~.])
-          [#outline.entry(..fields.values()) <modified-entry>]
-        })
-      })
-    }
-  }
+  set raw(syntaxes: "template/assets/syntaxes/Arduino.sublime-syntax")
+  show raw: set text(size: 11pt, font: "New Computer Modern Mono")
+  show bibliography: set par(justify: false)
+  set bibliography(style: "institute-of-electrical-and-electronics-engineers")
 
 
   // Introduce la portada
@@ -178,8 +73,10 @@
       teachers: teachers,
       auxiliaries: auxiliaries,
       assistants: assistants,
+      lab-assistants: lab-assistants,
+      semester: semester,
       due-date: due-date,
-      location: location,
+      place: place,
       university: university,
       faculty: faculty,
       department: department,
@@ -187,7 +84,93 @@
     )
   }
 
+  
+  // Resize de títulos y subtítulos
+  let font-sizes = (17.28pt, 14.4pt, 12pt)
+  show heading: it => block(above: 1.4em, below: 1em)[
+    #let new-size = font-sizes.at(it.level - 1, default: 11pt)
+    #set text(size: new-size)
+    #if it.numbering == none {
+      it.body
+    } else [
+      #context counter(it.func()).display() #h(10pt) #it.body
+    ]
+  ]
 
+  
+  // Referencia de forma apropiada
+  show ref: it => {
+    let el = it.element
+    if el != none {
+      if el.func() == figure and el.kind == "subfigure" {
+        let fig-counter = counter(figure.where(kind: image)).at(el.location()).first()
+        let subfig-numbering = numbering(el.numbering, el.counter.at(el.location()).first())
+        link(el.location(), [#el.supplement #fig-counter.#subfig-numbering])
+      } else if el.func() == heading and el.supplement == [Anexo] and el.level == 1 {
+        numbering(el.numbering, ..counter(heading).at(el.location()))
+      } else {
+        it
+      }
+    } else {
+      it
+    }
+  }
+
+
+  // Counter para subfigures
+  show figure.where(kind: "subfigure"): set figure(supplement: "Figura", numbering: "a")
+
+  show figure.caption.where(kind: "subfigure"): it => [
+    (#it.counter.display()) #it.body
+    #v(5pt)
+  ]
+  
+  // Actualiza el contador de subfigure de forma apropiada
+  show figure.where(kind: image): it => {
+    counter(figure.where(kind:"subfigure")).update(0)
+    it
+  }
+
+
+  // Modifica apariencia de índices
+  show outline: it => custom-outline(title: it.title, target: it.target)
+
+
+  // Usa el paquete Codly para modificar la apariencia de códigos
+  show figure.where(kind: raw): set figure(supplement: "Código")
+  
+  let icon(codepoint) = {
+  box(
+    height: 0.8em,
+    baseline: 0.05em,
+    image(codepoint)
+  )
+  h(0.1em)
+}
+  show: codly-init.with()
+  codly(languages: (
+    python: (
+      name: "Python",
+      icon: icon("template/assets/logos/python.svg"),
+      color: rgb("#FFC331")
+    ),
+    rust: (
+      name: "Rust",
+      icon: icon("template/assets/logos/rust.svg"),
+      color: rgb("#CE412B")
+    ),
+    arduino: (
+      name: "Arduino",
+      icon: icon("template/assets/logos/arduino.svg"),
+      color: rgb("#00878F")
+    )
+  ))
+  
+
+  // Figuras pueden ser contenidas en múltiples páginas
+  show figure: set block(breakable: true)
+
+  
   // Comienzo del documento
   doc
 }
