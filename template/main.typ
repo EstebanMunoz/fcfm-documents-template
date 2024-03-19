@@ -1,10 +1,10 @@
-#import "@local/fcfm-informe:0.1.0": conf
+#import "@local/fcfm-informe:0.1.0": conf, today
 
 // Parámetros para la configuración del documento. Descomentar aquellas que se quieran usar
 #let document-params = (
   // "include-title-page": false,
-  "title": "Document title",
-  "subject": "Document subject",
+  "title": "Título del documento",
+  "subject": "Tema del documento",
   // "course-name": "",
   // "course-code": "",
   "students": ("Esteban Muñoz",),
@@ -13,7 +13,7 @@
   // "assistants": (),
   // "lab-assistants": (),
   // "semester": "",
-  // "due-date": "",
+  "due-date": today,
   "place": "Santiago de Chile",
   "university": "Universidad de Chile",
   "faculty": "Facultad de Ciencias Físicas y Matemáticas",

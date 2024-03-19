@@ -175,3 +175,9 @@
   // Comienzo del documento
   doc
 }
+
+// Misc: configuraciones extra
+#let months = ("January": "Enero", "February": "Febrero", "March": "Marzo", "April": "Abril", "May": "Mayo", "June": "Junio", "July": "Julio", "August": "Agosto", "September": "Septiembre", "October": "Octubre", "November": "Noviembre", "December": "Diciembre")
+
+#let month = datetime.today().display("[month repr:long]")
+#let today = datetime.today().display("[day] de [month repr:long] de [year]").replace(month, months.at(month))

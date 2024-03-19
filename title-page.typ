@@ -51,11 +51,10 @@
 
 
   align(right + bottom)[
-    #block(width: 260pt)[
+    #block(width: 270pt)[
       #grid(
         columns: (75pt, auto),
-        align: (top + right, top + left),
-        column-gutter: 20pt,
+        align: top + left,
         row-gutter: 7pt,
         
         ..place-people-in-grid(students, "Integrante:", "Integrantes:"),
@@ -73,20 +72,20 @@
         ..place-people-in-grid(lab-assistants, [Ayudante de \ laboratorio:], [Ayudantes de \ laboratorio:]),
         ..lab-assistants,
 
-        if semester != none {
-          "Semestre:"
-        },
-        semester,
+        ..if semester != none {(
+          grid.cell("Semestre:"),
+          grid.cell(semester)
+        )},
 
         grid.cell(colspan: 2, v(5pt)),
         
-        if due-date != none {
-          grid.cell(colspan: 2, align: left)[Fecha de entrega: #due-date]
-        },
+        ..if due-date != none {(
+          grid.cell(colspan: 2)[Fecha de entrega: #due-date],
+        )},
 
-        if place != none {
-          grid.cell(colspan: 2, align: left, place)
-        }
+        ..if place != none {(
+          grid.cell(colspan: 2, place),
+        )}
       )
     ]
   ]
