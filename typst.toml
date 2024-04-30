@@ -5,6 +5,7 @@ entrypoint = "conf.typ"
 authors = ["Esteban Muñoz"]
 license = "MIT-0"
 description = "A Typst port for the de facto FCFM template report."
+exclude = [".git", ".gitignore"]
 
 [template]
 path = "template"
