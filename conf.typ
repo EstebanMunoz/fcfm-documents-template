@@ -135,6 +135,13 @@
   // Modifica apariencia de índices
   show outline: it => custom-outline(title: it.title, target: it.target)
 
+  // Modifica apariencia de tablas
+  show table.cell.where(y: 0): set text(style: "normal", weight: "bold")
+  set table(
+    stroke: (_, y) => if y == 0 { (bottom: 1pt) },
+    inset: (x, y) => if y == 0 { 8pt } else { 5pt }
+  )
+
 
   // Usa el paquete Codly para modificar la apariencia de códigos
   show figure.where(kind: raw): set figure(supplement: "Código")
