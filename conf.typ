@@ -155,6 +155,11 @@
       icon: icon("template/assets/logos/python.svg"),
       color: rgb("#FFC331")
     ),
+    javascript: (
+      name: "JavaScript",
+      icon: icon("template/assets/logos/javascript.svg"),
+      color: rgb("#F7DF1E")
+    ),
     rust: (
       name: "Rust",
       icon: icon("template/assets/logos/rust.svg"),
