@@ -1,7 +1,8 @@
 #import "title-page.typ": title-page
 #import "custom-outline.typ": custom-outline
 
-#import "@preview/codly:0.2.0": *
+#import "@preview/codly:1.0.0": *
+#import "@preview/subpar:0.1.1"
 
 #let conf(
   include-title-page: true,
@@ -97,48 +98,20 @@
     ]
   ]
 
-  
-  // Referencia de forma apropiada
-  show ref: it => {
-    let el = it.element
-    if el != none {
-      if el.func() == figure and el.kind == "subfigure" {
-        let fig-counter = counter(figure.where(kind: image)).at(el.location()).first()
-        let subfig-numbering = numbering(el.numbering, el.counter.at(el.location()).first())
-        link(el.location(), [#el.supplement #fig-counter.#subfig-numbering])
-      } else if el.func() == heading and el.supplement == [Anexo] and el.level == 1 {
-        numbering(el.numbering, ..counter(heading).at(el.location()))
-      } else {
-        it
-      }
-    } else {
-      it
-    }
-  }
-
-
-  // Counter para subfigures
-  show figure.where(kind: "subfigure"): set figure(supplement: "Figura", numbering: "a")
-
-  show figure.caption.where(kind: "subfigure"): it => [
-    (#it.counter.display()) #it.body
-    #v(5pt)
-  ]
-  
-  // Actualiza el contador de subfigure de forma apropiada
-  show figure.where(kind: image): it => {
-    counter(figure.where(kind:"subfigure")).update(0)
-    it
-  }
-
 
   // Modifica apariencia de índices
   show outline: it => custom-outline(title: it.title, target: it.target)
 
+
   // Modifica apariencia de tablas
-  show table.cell.where(y: 0): set text(style: "normal", weight: "bold")
+  show table.cell.where(y: 0): strong
   set table(
-    stroke: (_, y) => if y == 0 { (bottom: 1pt) },
+    stroke: (_, y) => (
+      left: 0pt,
+      right: 0pt,
+      top: if y == 1 { 1pt } else { 0pt },
+      bottom: 1pt
+    ),
     inset: (x, y) => if y == 0 { 8pt } else { 5pt }
   )
 
@@ -187,6 +160,14 @@
   // Comienzo del documento
   doc
 }
+
+
+// Crea función para subfigures
+#let subfigures = subpar.grid.with(
+  gap: 1em,
+  numbering-sub-ref: "1.a",
+)
+
 
 // Misc: configuraciones extra
 #let months = ("January": "Enero", "February": "Febrero", "March": "Marzo", "April": "Abril", "May": "Mayo", "June": "Junio", "July": "Julio", "August": "Agosto", "September": "Septiembre", "October": "Octubre", "November": "Noviembre", "December": "Diciembre")
