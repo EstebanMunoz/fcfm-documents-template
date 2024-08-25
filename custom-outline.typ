@@ -1,14 +1,17 @@
 // Función que genera un outline de acuerdo al target entregado
 #let custom-outline(
   title: auto,
-  target: heading.where(outlined: true)
+  target: heading
 ) = context {
   
   // Busca todos los elementos que concuerden con el target
-  let queried = query(selector(target))
-
+  let queried = query(selector(target)).filter(q => q.outlined == true)
+  
   // Si no existe ningún elemento, outline no entrega nada y no se continua con la ejecución
   if queried.len() == 0 {return}
+
+  // Ubicación de cada elemento
+  let locations = queried.map(q => q.location().position())
 
   // Tipo de datos que se están buscando
   let queried-type = queried.at(0).func()
@@ -45,7 +48,8 @@
   // Array con los números de página de los elementos encontrados
   let page-numbers = queried.map(q => {
     let loc = q.location()
-    numbering(loc.page-numbering(), ..counter(page).at(loc))
+    let page-numbering = if loc.page-numbering() != none {loc.page-numbering()} else {"1"}
+    numbering(page-numbering, ..counter(page).at(loc))
   })
 
   // Ancho máximo de un numering antes de hacer un merge con el contenido
@@ -54,7 +58,7 @@
   // Función auxiliar que maneja el llenado de cada celda
   let populate-cells() = {
 
-    // Array que contendrá todas las celdas a utilizar en la en grilla
+    // Array que contendrá todas las celdas a utilizar en la grilla
     let cells = ()
 
     // Por cada elemento encontrado se agrega una fila
@@ -116,22 +120,24 @@
 
       // Si el elemento tiene una celda para numbering, se agrega dicho numbering a la grilla
       if not has-no-number-cell {
-        cells.push(grid.cell(y: i, x: numb-x-pos, inset: inset, current-numbering))
+        cells.push(grid.cell(y: i, x: numb-x-pos, inset: inset, link(locations.at(i), current-numbering)))
       }
 
       // Se agrega la celda de contenido al array
-      cells.push(grid.cell(y: i, colspan: colspan, x: x-pos, inset: inset, content))
+      cells.push(grid.cell(y: i, colspan: colspan, x: x-pos, inset: inset, link(locations.at(i), content)))
 
       // Se agrega la celda de número de página al array
-      cells.push(grid.cell(y: i, x: num-cols - 1, align: right + bottom, inset: inset, current-page))
+      cells.push(grid.cell(y: i, x: num-cols - 1, align: right + bottom, inset: inset, link(locations.at(i), current-page)))
     }
 
     // Se retorna el array de celdas
     return cells
   }
 
+  let shown-title = if title == auto {if text.lang == "es" {"Índice"} else {"Contents"}} else {title}
+
   // Contenido entregado por el outline: un heading y una grilla
-  heading(numbering: none)[#title]
+  heading(numbering: none)[#shown-title]
   
   grid(
     columns: (auto,) * (num-cols - 1) + (1fr,), 
