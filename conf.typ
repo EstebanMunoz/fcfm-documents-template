@@ -6,7 +6,9 @@
 
 #let conf(
   include-title-page: true,
+  is-subtitle-in-header: false,
   title: none,
+  subtitle: none,
   subject: none,
   students: (),
   teachers: (),
@@ -35,6 +37,11 @@
     }
   }
 
+  let get-subject-for-header() = {
+    if is-subtitle-in-header { return subtitle }
+    return title
+  }
+
   // Seteo general del documento
   set document(title: title, author: students)
   
@@ -44,7 +51,7 @@
     header: [#stack(
       dir: ttb,
       spacing: 4.5pt,
-      [#smallcaps(title) #h(1fr) #emph(get-heading-for-header())],
+      [#smallcaps(get-subject-for-header()) #h(1fr) #emph(get-heading-for-header())],
       line(length: 100%, stroke: 0.4pt)
     )],
     footer: [#stack(
@@ -58,11 +65,19 @@
   
   set par(leading: 0.55em, justify: true)
   set heading(numbering: "1.")
+  show figure.where(kind: math.equation): set math.equation(numbering: "(1)")
+  // set math.equation(numbering: "(1)")
   set text(size: 11pt, font: "New Computer Modern", lang: "es")
-  set raw(syntaxes: "template/assets/syntaxes/Arduino.sublime-syntax")
+  set raw(
+    syntaxes: (
+      "template/assets/syntaxes/Arduino.sublime-syntax",
+      "template/assets/syntaxes/Cython.sublime-syntax",
+    )
+  )
   show raw: set text(size: 11pt, font: "New Computer Modern Mono")
   show bibliography: set par(justify: false)
   set bibliography(style: "institute-of-electrical-and-electronics-engineers")
+  // show link: it => { if type(it) == str { set text(fill: blue) } else { it } }
 
 
   // Introduce la portada
@@ -135,20 +150,25 @@
       icon: icon("template/assets/logos/python.svg"),
       color: rgb("#FFC331")
     ),
-    javascript: (
-      name: "JavaScript",
-      icon: icon("template/assets/logos/javascript.svg"),
-      color: rgb("#F7DF1E")
-    ),
-    rust: (
-      name: "Rust",
-      icon: icon("template/assets/logos/rust.svg"),
-      color: rgb("#CE412B")
+    cpp: (
+      name: "C++",
+      icon: icon("template/assets/logos/cpp.svg"),
+      color: rgb("#00599C")
     ),
     arduino: (
       name: "Arduino",
       icon: icon("template/assets/logos/arduino.svg"),
       color: rgb("#00878F")
+    ),
+    cython: (
+      name: "Cython",
+      icon: icon("template/assets/logos/cython.svg"),
+      color: rgb("#FFC331")
+    ),
+    latex: (
+      name: "LaTeX",
+      icon: icon("template/assets/logos/latex.svg"),
+      color: rgb("#008080")
     )
   ))
   
