@@ -54,7 +54,7 @@
     faculty: faculty,
     department: department,
     logo: logo,
-    course-code: course-name,
+    course-code: course-code,
     course-name: course-name)
   let resolve-doc-type = document-types.at(document-type)
   let document-values = resolve-doc-type(..doc-type-args)

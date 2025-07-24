@@ -44,7 +44,7 @@
     emph(target-header)
   }
 
-  let left-side-footer = [#course-code #course-name]
+  let left-side-footer = emph[#course-code #course-name]
 
   let right-side-footer = context counter(page).display(here().page-numbering())
 
