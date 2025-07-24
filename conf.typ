@@ -1,11 +1,15 @@
-#import "title-page.typ": title-page
 #import "custom-outline.typ": custom-outline
+#import "utils.typ": grid-header, grid-footer, subfigures, today
+
+// Document types
+#import "document-types/report.typ": report
+#import "document-types/assignment.typ": assignment
+#import "document-types/auxiliary.typ": auxiliary
 
 #import "@preview/codly:1.0.0": *
-#import "@preview/subpar:0.1.1"
 
 #let conf(
-  include-title-page: true,
+  document-type: "report",
   is-subtitle-in-header: false,
   title: none,
   subtitle: none,
@@ -16,7 +20,7 @@
   assistants: (),
   lab-assistants: (),
   semester: none,
-  due-date: none,
+  date: none,
   place: none,
   university: none,
   faculty: none,
@@ -26,40 +30,44 @@
   course-name: none,
   doc
 ) = {
-  // Función que entrega el heading que debe ir en el header
-  let get-heading-for-header() = context {
-    let headings = query(
-      selector(heading.where(level: 1))
-    ).filter(it => it.location().page() <= here().page())
-  
-    return if headings.len() > 0 {
-      headings.last().body
-    }
-  }
+  // Enum all the document types available in the template
+  let document-types = (
+    "report": report,
+    "assignment": assignment,
+    "auxiliary": auxiliary
+  )
 
-  let get-subject-for-header() = {
-    if is-subtitle-in-header { return subtitle }
-    return title
-  }
+  let doc-type-args = (
+    is-subtitle-in-header: is-subtitle-in-header,
+    title: title,
+    subtitle: subtitle,
+    subject: subject,
+    students: students,
+    teachers: teachers,
+    auxiliaries: auxiliaries,
+    assistants: assistants,
+    lab-assistants: lab-assistants,
+    semester: semester,
+    date: date,
+    place: place,
+    university: university,
+    faculty: faculty,
+    department: department,
+    logo: logo,
+    course-code: course-name,
+    course-name: course-name)
+  let resolve-doc-type = document-types.at(document-type)
+  let document-values = resolve-doc-type(..doc-type-args)
 
   // Seteo general del documento
   set document(title: title, author: students)
   
+
   set page(
     "us-letter",
-    margin: (top: 3.37cm, bottom: 3.07cm, right: 2.54cm, left: 2.54cm),
-    header: [#stack(
-      dir: ttb,
-      spacing: 4.5pt,
-      [#smallcaps(get-subject-for-header()) #h(1fr) #emph(get-heading-for-header())],
-      line(length: 100%, stroke: 0.4pt)
-    )],
-    footer: [#stack(
-      dir: ttb,
-      spacing: 4.5pt,
-      line(length: 100%, stroke: 0.4pt),
-      [#emph([#course-code #course-name]) #h(1fr) #context counter(page).display(here().page-numbering())]
-    )],
+    margin: document-values.at("page-margin"),
+    header: grid-header(document-values.at("left-side-header"), document-values.at("right-side-header")),
+    footer: grid-footer(document-values.at("left-side-footer"), document-values.at("right-side-footer")),
     numbering: "1"
   )
   
@@ -79,27 +87,6 @@
   set bibliography(style: "institute-of-electrical-and-electronics-engineers")
   // show link: it => { if type(it) == str { set text(fill: blue) } else { it } }
 
-
-  // Introduce la portada
-  if include-title-page {
-    title-page(
-      title: title,
-      subject: subject,
-      students: students,
-      teachers: teachers,
-      auxiliaries: auxiliaries,
-      assistants: assistants,
-      lab-assistants: lab-assistants,
-      semester: semester,
-      due-date: due-date,
-      place: place,
-      university: university,
-      faculty: faculty,
-      department: department,
-      logo: logo
-    )
-  }
-
   
   // Resize de títulos y subtítulos
   let font-sizes = (17.28pt, 14.4pt, 12pt)
@@ -113,6 +100,8 @@
     ]
   ]
 
+  // Introduce la portada
+  document-values.at("title-content")
 
   // Modifica apariencia de índices
   show outline: it => custom-outline(title: it.title, target: it.target)
@@ -180,17 +169,3 @@
   // Comienzo del documento
   doc
 }
-
-
-// Crea función para subfigures
-#let subfigures = subpar.grid.with(
-  gap: 1em,
-  numbering-sub-ref: "1.a",
-)
-
-
-// Misc: configuraciones extra
-#let months = ("January": "Enero", "February": "Febrero", "March": "Marzo", "April": "Abril", "May": "Mayo", "June": "Junio", "July": "Julio", "August": "Agosto", "September": "Septiembre", "October": "Octubre", "November": "Noviembre", "December": "Diciembre")
-
-#let month = datetime.today().display("[month repr:long]")
-#let today = datetime.today().display("[day] de [month repr:long] de [year]").replace(month, months.at(month))

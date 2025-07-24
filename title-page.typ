@@ -14,7 +14,7 @@
   assistants: (),
   lab-assistants: (),
   semester: none,
-  due-date: none,
+  date: none,
   place: none,
   university: none,
   faculty: none,
@@ -24,22 +24,18 @@
   let first-page-header = [
     #set align(left)
     #set text(11pt)
-    #stack(
-      dir: ttb,
-      spacing: 4pt,
-      [#stack(
-        dir: ltr,
-        spacing: 1fr,
-        [#stack(
-          dir: ttb,
-          spacing: 6pt,
-          [#university],
-          [#faculty],
-          [#department]
-        )],
-        logo
-      )],
-      [#line(length: 100%, stroke: 0.4pt)]
+    #grid(
+      align: (left + bottom, right),
+      columns: (auto, auto),
+      column-gutter: 1fr,
+      inset: (bottom: 4.5pt),
+      [
+        #university \
+        #faculty \
+        #department
+      ],
+      logo,
+      grid.hline(stroke: 0.4pt)
     )
   ]
 
@@ -79,8 +75,8 @@
 
         grid.cell(colspan: 2, v(5pt)),
         
-        ..if due-date != none {(
-          grid.cell(colspan: 2)[Fecha de entrega: #due-date],
+        ..if date != none {(
+          grid.cell(colspan: 2)[Fecha de entrega: #date],
         )},
 
         ..if place != none {(

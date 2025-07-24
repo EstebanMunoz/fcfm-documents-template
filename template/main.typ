@@ -1,18 +1,19 @@
-#import "@local/fcfm-informe:0.1.0": conf, subfigures, today
+#import "@local/fcfm-documents:0.2.0": conf, subfigures, today
 
 // Parámetros para la configuración del documento. Descomentar aquellas que se quieran usar
 #let document-params = (
-  // "include-title-page": false,
+  "document-type": "report",
+  "is-subtitle-in-header": false,
   "title": "Título del documento",
   "subject": "Tema del documento",
-  // "course-name": "",
-  // "course-code": "",
+  "course-name": "Introducción a Typst",
+  "course-code": "CC1234",
   "students": ("Esteban Muñoz",),
   // "teachers": ("",),
   // "auxiliaries": ("",),
   // "assistants": ("",),
   // "semester": "Otoño 2024",
-  "due-date": today,
+  "date": today,
   "place": "Santiago de Chile",
   "university": "Universidad de Chile",
   "faculty": "Facultad de Ciencias Físicas y Matemáticas",
@@ -116,4 +117,4 @@ The results shown in @table:results, one can understand that the importance of t
 
 #lorem(101)
 
-Por lo tanto, se concluye que se cumplieron los objetivos
+Por lo tanto, se concluye que se cumplieron los objetivos.

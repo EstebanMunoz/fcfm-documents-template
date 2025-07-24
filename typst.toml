@@ -1,11 +1,11 @@
 [package]
-name = "fcfm-informe"
-version = "0.1.0"
+name = "fcfm-documents"
+version = "0.2.0"
 entrypoint = "conf.typ"
 authors = ["Esteban Muñoz"]
 license = "MIT-0"
-description = "A port for the de facto FCFM template report written in Latex."
-exclude = [".git", ".gitignore", ".vscode"]
+description = "Reports, assignments and auxiliary classes template to use in FCFM."
+exclude = [".git", ".gitignore"]
 
 [template]
 path = "template"
