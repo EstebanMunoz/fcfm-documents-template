@@ -6,7 +6,7 @@
 #import "document-types/assignment.typ": assignment
 #import "document-types/auxiliary.typ": auxiliary
 
-#import "@preview/codly:1.0.0": *
+#import "@preview/codly:1.3.0": *
 
 #let conf(
   document-type: "report",
