@@ -6,6 +6,10 @@
 #import "document-types/assignment.typ": assignment
 #import "document-types/auxiliary.typ": auxiliary
 
+// Circetz library
+#import "/circetz/lib.typ": components, show-anchor
+
+// Public packages
 #import "@preview/codly:1.3.0": *
 
 #let conf(

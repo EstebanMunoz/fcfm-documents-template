@@ -1,4 +1,5 @@
-#import "@local/fcfm-documents:0.2.0": conf, subfigures, today
+#import "@local/fcfm-documents:0.2.0": conf, subfigures, today, components, show-anchor
+#import "@preview/cetz:0.4.1"
 
 // Parámetros para la configuración del documento. Descomentar aquellas que se quieran usar
 #let document-params = (
@@ -45,6 +46,34 @@
 = Sección importante
 
 #lorem(200)
+
+#figure(
+  caption: "Circuito resistivo en serie",
+  cetz.canvas(length: 25pt, {
+    import components: *
+    import cetz.draw: *
+
+    set-style(
+      stroke: (thickness: 0.4pt),
+      content: (padding: 0.1em),
+      circetz: (
+        style: (
+          current: "american",
+          voltage: "american",
+        ),
+      ),
+    )
+    
+    // Circuit
+    vsource((0, 0), (0, 7.5), l: $v_0$, name: "V")
+    short((), (6, 7.5))
+    resistor((), (6, 5), name: "R1", v: ("^", $R_1$))
+    resistor((), (6, 2.5), name: "R2", v: ("^", $R_2$))
+    resistor((), (6, 0), name: "R3", v: ("^", $R_3$))
+    short((), (0, 0))
+
+  })
+)
 
 == Subsección importante
 
