@@ -27,8 +27,6 @@
   course-code: none,
   course-name: none
 ) = {
-  let include-title-page = true
-
   let left-side-header = smallcaps(
     if is-subtitle-in-header { subtitle } else { title }
   )

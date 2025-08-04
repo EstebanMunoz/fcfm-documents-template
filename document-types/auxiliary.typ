@@ -18,8 +18,6 @@
   course-code: none,
   course-name: none
 ) = {
-  let include-title-page = false
-
   let left-side-header = [
     #university \
     #department \
