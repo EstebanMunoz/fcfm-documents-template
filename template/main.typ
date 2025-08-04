@@ -1,4 +1,4 @@
-#import "@local/fcfm-documents:0.2.0": conf, subfigures, today, components, show-anchor
+#import "@local/fcfm-documents:0.3.0": conf, subfigures, today, components, show-anchor
 #import "@preview/cetz:0.4.1"
 
 // Parámetros para la configuración del documento. Descomentar aquellas que se quieran usar
