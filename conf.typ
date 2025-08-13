@@ -69,9 +69,9 @@
 
   set page(
     "us-letter",
-    margin: document-values.at("page-margin"),
-    header: grid-header(document-values.at("left-side-header"), document-values.at("right-side-header")),
-    footer: grid-footer(document-values.at("left-side-footer"), document-values.at("right-side-footer")),
+    margin: document-values.page-margin,
+    header: grid-header(document-values.left-side-header, document-values.right-side-header),
+    footer: grid-footer(document-values.left-side-footer, document-values.right-side-footer),
     numbering: "1"
   )
   
@@ -105,7 +105,7 @@
   ]
 
   // Introduce la portada
-  document-values.at("title-content")
+  document-values.title-content
 
   // Modifica apariencia de índices
   show outline: it => custom-outline(title: it.title, target: it.target)
