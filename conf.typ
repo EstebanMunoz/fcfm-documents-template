@@ -1,5 +1,5 @@
 #import "custom-outline.typ": custom-outline
-#import "utils.typ": grid-header, grid-footer, subfigures, today
+#import "utils.typ": grid-header, grid-footer, activity, subfigures, today
 
 // Document types
 #import "document-types/report.typ": report
@@ -78,7 +78,6 @@
   set par(leading: 0.55em, justify: true)
   set heading(numbering: "1.")
   show figure.where(kind: math.equation): set math.equation(numbering: "(1)")
-  // set math.equation(numbering: "(1)")
   set text(size: 11pt, font: "New Computer Modern", lang: "es")
   set raw(
     syntaxes: (

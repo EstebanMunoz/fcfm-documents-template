@@ -1,6 +1,6 @@
 [package]
 name = "fcfm-documents"
-version = "100.0.0"
+version = "0.3.1"
 entrypoint = "conf.typ"
 authors = ["Esteban Muñoz"]
 license = "MIT-0"
