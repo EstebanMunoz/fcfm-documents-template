@@ -7,12 +7,14 @@
     return
   }
   assert(poles.len() in (2, 3))
-  import "/circetz/components/terminal-shapes.typ": circ, ocirc
+  import "/circetz/components/terminal-shapes.typ": circ, ocirc, sqr
   for (pos, pole) in (("start", poles.first()), ("end", poles.last())) {
     if pole == "*" {
       circ(pos)
     } else if pole == "o" {
       ocirc(pos)
+    } else if pole == "s" {
+      sqr(pos)
     }
   }
 }

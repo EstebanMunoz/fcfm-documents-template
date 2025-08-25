@@ -40,3 +40,22 @@
   ),
   ..inputs
 )
+
+#let sqr(..inputs) = component(
+  "sqr",
+  (style) => {
+    rect(
+      (-style.nodes-width/2, style.nodes-width/2),
+      (style.nodes-width/2, -style.nodes-width/2),
+      stroke: if style.stroke.paint != none { style.stroke },
+      fill: style.fill
+    )
+  },
+  (
+    stroke: auto,
+    fill: black,
+    scale: auto,
+    nodes-width: auto,
+  ),
+  ..inputs
+)
