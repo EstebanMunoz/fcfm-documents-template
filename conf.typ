@@ -85,7 +85,7 @@
       "template/assets/syntaxes/Cython.sublime-syntax",
     )
   )
-  show raw: set text(size: 11pt, font: "FiraCode Nerd Font")
+  show raw: set text(size: 9pt, font: "FiraCode Nerd Font")
   show bibliography: set par(justify: false)
   set bibliography(style: "institute-of-electrical-and-electronics-engineers")
   // show link: it => { if type(it) == str { set text(fill: blue) } else { it } }
