@@ -77,7 +77,6 @@
     )
     anchor("a", (-x, -height/2))
     anchor("b", (x, height/2))
-    // anchor("text", (0, style.label.last()))
   },
   (
     stroke: auto,
@@ -97,10 +96,11 @@
     let height = style.height
     let sgn = -1
     let x = style.width / 2
+    let wiper-x = style.width * style.wiper-pos - x
     style.stroke.thickness *= style.thickness
     line(
-      (0, height),
-      (0, height*2),
+      (wiper-x, height/2),
+      (wiper-x, height*1.5),
       mark: (start: ">", fill: black, stroke: style.stroke.thickness / 4),
       fill: none,
       stroke: style.stroke
@@ -118,8 +118,11 @@
     )
     anchor("a", (-x, -height/2))
     anchor("b", (x, height/2))
-    anchor("c", (0, height*2))
-    // anchor("text", (0, style.label.last()))
+    anchor("c", (wiper-x, height*1.5))
+    
+    anchor("rect1", (-x, -height/2))
+    anchor("rect2", (x, height*1.5))
+
   },
   (
     stroke: auto,
@@ -128,6 +131,8 @@
     width: 0.8,
     height: 0.3,
     zigs: 3,
+    wiper-pos: 0.5
   ),
+  is-tripole: true,
   ..inputs
 )

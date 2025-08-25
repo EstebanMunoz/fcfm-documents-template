@@ -56,6 +56,7 @@
   poles: none,
   mirror: false,
   invert: false,
+  is-tripole: false,
   rotate: 0deg,
   ..position-style,
   ) = {
@@ -69,7 +70,7 @@
 
   assert(rotation == 0deg or pos.len() == 1, message: "Rotation is only supported for node placement.")
   let _ = if type(rotation) != angle {
-    cetz.coordinate.resolve-system(rotation)
+    cetz.coordinate.resolve-system.with((:))(rotation)
   }
 
   group(name: name, ctx => {
@@ -148,11 +149,19 @@
             x: if invert { -1 } else { 1 }
           )
         }
-        if pos.len() == 2 and component-name != "short" {
-          hide(rect("a", "b", name: "rect"))
-          copy-anchors("rect")
+
+        if is-tripole {
+          hide(rect("a", "b", name: "wire-rect"))
+          hide(rect("rect1", "rect2", name: "bounding-rect"))
+          copy-anchors("bounding-rect")
+          anchor("west", "wire-rect.west")
+          anchor("east", "wire-rect.east")
         }
-        ()
+
+        else if pos.len() == 2 and component-name != "short" {
+            hide(rect("a", "b", name: "rect"))
+            copy-anchors("rect")
+        }
       }
     )
 
@@ -163,18 +172,20 @@
         line("component.west", "start", stroke: style.stroke)
         line("component.east", "end", stroke: style.stroke)
       }
-      draw-labels(component-name, rotation, cetz.util.measure.with(ctx), l, a, i, v, f)
       draw-poles(poles)
-    } else {
-      if l != none {
-        content(
-          "component.text",
-          l,
-          anchor: if component-text == "left" { "west" } else { "center" },
-          padding: 0
-        )
-      }
     }
+    // } else {
+    //   if l != none {
+    //     content(
+    //       "component.text",
+    //       l,
+    //       anchor: if component-text == "left" { "west" } else { "center" },
+    //       padding: 0
+    //     )
+    //   }
+    // }
+    draw-labels(component-name, rotation, cetz.util.measure.with(ctx), l, a, i, v, f)
+
     if name != none {
       utils.copy-anchors("component")
     }
