@@ -50,8 +50,8 @@
     )
   },
   (
-    height: 0.6,
-    width: 0.2
+    height: 0.4,
+    width: 0.1
   ),
   inputs
 )

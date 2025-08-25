@@ -22,7 +22,7 @@
       line((-width2, -height2), (rel: (0, height)))
       line((), (width2, 0))
       line((), (-width2, -height2))
-    })
+    }, fill: style.fill)
 
     func(style)
     
@@ -31,9 +31,11 @@
   },
   (
     (
-      scale: auto,
       stroke: auto,
-      thickness: auto
+      thickness: auto,
+      fill: auto,
+      style: auto,
+      scale: auto,
     ),
     style
   ),
@@ -46,7 +48,10 @@
     let height2 = style.height / 2
 
     let width2 = style.width / 2
-    line((width2, -height2), (width2, height2))
+    line(
+      (width2, -height2),
+      (width2, height2)
+    )
 
   },
   (
