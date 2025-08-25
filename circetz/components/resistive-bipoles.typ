@@ -60,7 +60,7 @@
     line(
       (-x, -height*6/5),
       (x, height*6/5),
-      mark: (end: ">", fill: black),
+      mark: (end: ">", fill: black, stroke: style.stroke.thickness / 4),
       fill: none,
       stroke: style.stroke
     )
