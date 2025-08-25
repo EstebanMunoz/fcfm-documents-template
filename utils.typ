@@ -21,6 +21,26 @@
   right-side
 )
 
+// Agrega bloques de colores
+#let activity-counter = counter("activity")
+
+#let activity(fill: rgb("#E5F0F4"), activity-name: none, content) = {
+  activity-counter.step()
+  block(
+    fill: fill,
+    stroke: (left: rgb("#6EAAC3") + 3pt),
+    // stroke: (left: fill.darken(20%) + 2pt),
+    width: 100%,
+    inset: 10pt
+  )[
+    #smallcaps[
+      *Actividad #context activity-counter.display()* #sym.space #activity-name
+    ]
+
+    #content
+  ]
+}
+
 // Crea función para subfigures
 #let subfigures = subpar.grid.with(
   gap: 1em,
