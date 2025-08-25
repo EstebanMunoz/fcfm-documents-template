@@ -85,12 +85,12 @@
       "template/assets/syntaxes/Cython.sublime-syntax",
     )
   )
-  show raw: set text(size: 11pt, font: "New Computer Modern Mono")
+  show raw: set text(size: 11pt, font: "FiraCode Nerd Font")
   show bibliography: set par(justify: false)
   set bibliography(style: "institute-of-electrical-and-electronics-engineers")
   // show link: it => { if type(it) == str { set text(fill: blue) } else { it } }
 
-  
+
   // Resize de títulos y subtítulos
   let font-sizes = (17.28pt, 14.4pt, 12pt)
   show heading: it => block(above: 1.4em, below: 1em)[
